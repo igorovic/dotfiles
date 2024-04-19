@@ -1,0 +1,40 @@
+if [[ $# -lt 1 ]]; then
+  echo """
+Usage
+  gitpass <action> <repo>
+
+Example:
+      
+  gitpass_clone https://gitlab.com/user/repo.git
+"""
+  return
+fi
+
+
+local GITCMD=$1
+echo $2 | sed -nr 's%.*(gitlab.com|github.com)/(.*)/(.*)$%\1 \2 \3%gp' | read -A PARTS
+
+
+local PROVIDER=$PARTS[1] 
+local GITUSER=$PARTS[2]
+local REPO=$PARTS[3]
+local GITUSERNAME="${GIT_USERNAME:-$(git config --global user.username)}"
+local GITUSERNAME=${GITUSERNAME:-$GITUSER}
+
+if [[ -z "$GITUSERNAME" ]]; then
+  echo "Git Username is undefined"
+  return
+else
+  echo "Git Username: $GITUSERNAME"
+fi
+
+
+local PASSWORD=${$(gopass show "$PROVIDER/$GITUSERNAME" 2>/dev/null):-$(gopass show "$PROVIDER/$GITUSER" 2>/dev/null)}
+
+echo $PASSWORD
+
+
+git clone -c credential.helper= \
+-c credential.helper='!f(){ echo "username=$GITUSERNAME"; echo "password=$PASSWORD"; };f' $1
+
+

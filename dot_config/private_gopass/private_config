@@ -1,0 +1,4 @@
+[mounts]
+	path = /home/igptr/.password-store
+[edit]
+	editor = nvim --noplugin
