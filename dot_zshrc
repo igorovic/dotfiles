@@ -1,0 +1,115 @@
+# If you come from bash you might have to change your $PATH.
+export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:/usr/sbin:/sbin:/bin:$PATH
+
+
+autoload -U colors && colors
+# History in cache directory:
+setopt append_history         # Allow multiple sessions to append to one Zsh command history.
+setopt extended_history       # Show timestamp in history.
+setopt hist_expire_dups_first # Expire A duplicate event first when trimming history.
+setopt hist_find_no_dups      # Do not display a previously found event.
+setopt hist_ignore_all_dups   # Remove older duplicate entries from history.
+setopt hist_ignore_dups       # Do not record an event that was just recorded again.
+setopt hist_ignore_space      # Do not record an Event Starting With A Space.
+setopt hist_reduce_blanks     # Remove superfluous blanks from history items.
+setopt hist_save_no_dups      # Do not write a duplicate event to the history file.
+setopt hist_verify            # Do not execute immediately upon history expansion.
+setopt inc_append_history     # Write to the history file immediately, not when the shell exits.
+setopt share_history          # Share history between different instances of the shell.
+export HISTSIZE=1000
+export SAVEHIST=1000
+export HISTFILE="$HOME/.cache/zsh/history"
+
+# fix tab completion remanent chars in docker -- and avoid overriding in WSL
+if [[ -z "$LC_ALL" && -z "$LANG" ]]; then
+  export LC_ALL="C.UTF-8"
+fi
+
+# Basic auto/tab complete:
+autoload -U compinit
+zstyle ':completion:*' menu select
+zmodload zsh/complist
+compinit
+_comp_options+=(globdots)		# Include hidden files.
+
+# vi mode
+# bindkey -v
+export KEYTIMEOUT=1
+
+# # Use vim keys in tab complete menu:
+# bindkey -M menuselect 'h' vi-backward-char
+# bindkey -M menuselect 'k' vi-up-line-or-history
+# bindkey -M menuselect 'l' vi-forward-char
+# bindkey -M menuselect 'j' vi-down-line-or-history
+# bindkey -v '^?' backward-delete-char
+
+# freload will reload custom functions - e.g: freload nodejs-dev.zsh
+freload() { while (( $# )); do; unfunction $1; autoload -U $1; shift; done }
+
+# Change cursor shape for different vi modes.
+function zle-keymap-select {
+  if [[ ${KEYMAP} == vicmd ]] ||
+     [[ $1 = 'block' ]]; then
+    echo -ne '\e[1 q'
+  elif [[ ${KEYMAP} == main ]] ||
+       [[ ${KEYMAP} == viins ]] ||
+       [[ ${KEYMAP} = '' ]] ||
+       [[ $1 = 'beam' ]]; then
+    echo -ne '\e[5 q'
+  fi
+}
+zle -N zle-keymap-select
+zle-line-init() {
+    zle -K viins # initiate `vi insert` as keymap (can be removed if `bindkey -V` has been set elsewhere)
+    echo -ne "\e[5 q"
+}
+zle -N zle-line-init
+echo -ne '\e[5 q' # Use beam shape cursor on startup.
+preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
+
+bindkey '\e[H' beginning-of-line
+bindkey -M viins '\e[H' beginning-of-line                                   # also bind for viins mode
+# End key => ASCII representation: `<ESC>[F` ANSI representation: `^[[F`
+bindkey '^[[F' end-of-line
+bindkey -M viins '^[[F' end-of-line                                         # also bind for viins mode
+# <ESC> arrow-left
+bindkey '^[^[[D' beginning-of-line
+# <ESC> arrow-right
+bindkey '^[^[C' end-of-line
+# Ctrl W
+bindkey '^W' emacs-backward-word
+# <ESC> w
+bindkey '^[w' .delete-word
+bindkey '§' where-is
+# <DEL> key
+bindkey -M viins '^[[3~' vi-delete-char
+# fix backspace in viins mode
+bindkey -v '^?' backward-delete-char
+
+# use <ESC> to return to insert mode
+bindkey -M vicmd '^[' vi-insert
+# use <backspace> to delete chars in vicmd
+bindkey -M vicmd '^?' backward-delete-char
+# by default starts with viins keymap; use <ESC> to load vicmd keymap
+bindkey -v
+# hisory search must be after `bindkey -v`
+bindkey '^R' history-incremental-search-backward
+#bindkey -s '^[^['  'bindkey -A emacs main'^M
+# Edit line in vim with ctrl-e:
+autoload edit-command-line; zle -N edit-command-line
+bindkey '^e' edit-command-line
+
+if [[ -f "$HOME/.zprofile" ]]; then
+    . $HOME/.zprofile
+fi
+# Only force one TMUX session
+if [[ -z "$TMUX" && -n "$(which tmux)" && $(tmux ls -F '#{session_name}' 2>/dev/null) != 'TMUX' ]];then
+    tmux attach -t TMUX || tmux new -s TMUX
+fi
+if [[ ! -d "$HOME/.zfunc" ]]; then
+    mkdir "$HOME/.zfunc"
+fi
+
+# to load custom functions 
+fpath=("$HOME/.zfunc" "${fpath[@]}")
+
