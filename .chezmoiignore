@@ -5,3 +5,7 @@
 # ignore .local files
 **/*.local
 .zshenv
+.ssh/*
+~/.ssh/*
+!.ssh/config
+!~/.ssh/config
