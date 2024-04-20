@@ -1,3 +1,6 @@
+{{- if eq .chezmoi.os "darwin" -}}
+Include ~/.orbstack/ssh/config
+{{ end -}}
 Host gitlab.com
    ForwardAgent yes
    IdentityFile ~/.ssh/gitlab
