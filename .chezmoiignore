@@ -1,3 +1,6 @@
 {{- if ne .chezmoi.hostname "MBP16" }}
 .warp # only manage .warp on MBP16
 {{- end }}
+
+# ignore .local files
+**/*.local

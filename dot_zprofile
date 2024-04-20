@@ -1,20 +1,27 @@
+source .zfunc/utils
 
-if $(command -v rg > /dev/null 2>&1); then 
+#if $(command -v rg > /dev/null 2>&1); then 
+if command_exists rg; then 
     alias grep="rg"
 fi
 # avoid to break ls command if eza fails installing
-if $(command -v eza > /dev/null 2>&1); then 
+#if $(command -v eza > /dev/null 2>&1); then 
+if command_exists eza; then 
     alias ls="eza -lh"
+    alias la="eza -lha"
     alias ll="eza -lh --icons=always --color=auto --smart-group --no-time --git --no-filesize --no-user --no-permissions"
-
+else
+    alias ls="ls -lh"
+    alias la="ls -lha"
+    alias ll="ls -lha"
 fi
 alias tmux="tmux -2u"
 alias vim="nvim"
 #alias vi="nvim"
-git config --global core.editor nvim
+git config --global core.editor "nvim --noplugin"
 eval "$(starship init zsh)"
 # check if zoxide exist to avoid breaking cd command
-if $(command -v zoxide > /dev/null 2>&1); then 
+if command_exists zoxide; then 
     eval "$(zoxide init --cmd cd zsh)"
 else
    echo 'zoxide is not installed' 
@@ -36,6 +43,10 @@ fi
 if [[ -d "$HOME/.zsh/zsh-autosuggestions" ]]; then
     source "$HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh"
     bindkey '^ ' autosuggest-accept
+fi
+
+if [[ -f "$HOME/.zprofile.local" ]]; then
+    source "$HOME/.zprofile.local"
 fi
 
 # function found online
