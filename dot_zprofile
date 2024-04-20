@@ -27,6 +27,10 @@ else
    echo 'zoxide is not installed' 
 fi
 
+if command_exists fzf; then
+    eval "$(fzf --zsh)"
+fi
+
 # do not override with empty values
 if [[ ! -z "$GIT_USER_EMAIL" && -z "$(git config user.email)" ]]; then
     git config --global user.email "$GIT_USER_EMAIL"
