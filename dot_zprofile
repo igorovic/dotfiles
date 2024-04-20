@@ -1,5 +1,7 @@
 source "$HOME/.zfunc/utils"
-
+# zsh loads .zprofile on login - inside containers without login we 
+# need to tell zsh to load it. we use ZPROFILEOK to detect if loaded or not. 
+export ZPROFILEOK='ok'
 #if $(command -v rg > /dev/null 2>&1); then 
 if command_exists rg; then 
     alias grep="rg"

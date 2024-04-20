@@ -119,3 +119,6 @@ fi
 # to load custom functions 
 fpath=("$HOME/.zfunc" "${fpath[@]}")
 
+if [[ "$ZPROFILEOK" != 'ok' && -f "$HOME/.zprofile" ]]; then
+  source "$HOME/.zprofile"
+fi
