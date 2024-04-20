@@ -49,9 +49,7 @@ fi
     
     # Now autoload them
     if [[ -d $funcs ]]; then
-        # use sed to remove .zsh extension if it exists
-        #autoload ${=$(cd "$funcs" && echo * | sed -e ':a' -e 's/.zsh//g; ta')}
-        autoload ${=$(cd "$funcs" && echo *)}
+        autoload -Uz ${=$(cd "$funcs" && echo *)}
     fi
 }
 

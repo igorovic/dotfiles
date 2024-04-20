@@ -1,0 +1,10 @@
+
+command_exists(){
+  command -v "$@" >/dev/null 2>&1
+}
+
+is_darwin(){
+    # zsh expansion modifier `:l`
+     [[ "${$(uname -s):l}" == 'darwin' ]]
+}
+
