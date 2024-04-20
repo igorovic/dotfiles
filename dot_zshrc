@@ -1,6 +1,7 @@
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:/usr/sbin:/sbin:/bin:$PATH
 
+source "$HOME/.zfunc/utils"
 
 autoload -U colors && colors
 # History in cache directory:
@@ -99,17 +100,15 @@ bindkey '^R' history-incremental-search-backward
 autoload edit-command-line; zle -N edit-command-line
 bindkey '^e' edit-command-line
 
-# if [[ -f "$HOME/.zprofile" ]]; then
-#     . $HOME/.zprofile
-# fi
 # Only force one TMUX session
-if [[ -z "$TMUX" && -n "$(which tmux)" && $(tmux ls -F '#{session_name}' 2>/dev/null) != 'TMUX' ]];then
-    tmux attach -t TMUX || tmux new -s TMUX
+if command_exists tmux; then
+  if [[ -z "$TMUX" && -n "$(which tmux)" && $(tmux ls -F '#{session_name}' 2>/dev/null) != 'TMUX' ]];then
+      tmux attach -t TMUX || tmux new -s TMUX
+  fi
+  if [[ ! -d "$HOME/.zfunc" ]]; then
+      mkdir "$HOME/.zfunc"
 fi
-if [[ ! -d "$HOME/.zfunc" ]]; then
-    mkdir "$HOME/.zfunc"
 fi
-
 # to load custom functions 
 fpath=("$HOME/.zfunc" "${fpath[@]}")
 
