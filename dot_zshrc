@@ -33,8 +33,6 @@ zmodload zsh/complist
 compinit -i
 _comp_options+=(globdots)		# Include hidden files.
 
-# vi mode
-# bindkey -v
 export KEYTIMEOUT=1
 
 # # Use vim keys in tab complete menu:
@@ -68,19 +66,29 @@ zle -N zle-line-init
 echo -ne '\e[5 q' # Use beam shape cursor on startup.
 preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
 
-bindkey '\e[H' beginning-of-line
-bindkey -M viins '\e[H' beginning-of-line                                   # also bind for viins mode
-# End key => ASCII representation: `<ESC>[F` ANSI representation: `^[[F`
-bindkey '^[[F' end-of-line
-bindkey -M viins '^[[F' end-of-line                                         # also bind for viins mode
+# ---------------------------------------- 
+# match zsh binding with warp cli bindings
+# ----------------------------------------
+# - `-M vicmd` binding in vim normal mode
+# - `-M viins` binding in vim insert mode
+
+# Ctrl+A 
+bindkey '^A' beginning-of-line
+bindkey -M vicmd '^A' beginning-of-line
+# Ctrl+E
+bindkey '^E' end-of-line
+bindkey -M vicmd '^E' end-of-line
 # <ESC> arrow-left
 bindkey '^[^[[D' beginning-of-line
+bindkey -M vicmd '^[^[[D' beginning-of-line # bind vicmd because first <ESC> will switch to vicmd mode
 # <ESC> arrow-right
 bindkey '^[^[C' end-of-line
+bindkey -M vicmd '^[^[C' end-of-line
 # Ctrl W
 bindkey '^W' emacs-backward-word
 # <ESC> w
 bindkey '^[w' .delete-word
+bindkey '∑' .delete-word
 bindkey '§' where-is
 # <DEL> key
 bindkey -M viins '^[[3~' vi-delete-char
@@ -95,10 +103,11 @@ bindkey -M vicmd '^?' backward-delete-char
 bindkey -v
 # hisory search must be after `bindkey -v`
 bindkey '^R' history-incremental-search-backward
-#bindkey -s '^[^['  'bindkey -A emacs main'^M
 # Edit line in vim with ctrl-e:
 autoload edit-command-line; zle -N edit-command-line
-bindkey '^e' edit-command-line
+# <ESC>E - key switches Alt+E or Opt+E - edit 
+bindkey '^[e' edit-command-line
+bindkey '€' edit-command-line # for my particular keyboard that sends this car for <ESC>E
 
 # Only force one TMUX session
 if command_exists tmux; then
