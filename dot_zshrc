@@ -107,6 +107,10 @@ bindkey '^R' history-incremental-search-backward
 autoload edit-command-line; zle -N edit-command-line
 bindkey '^e' edit-command-line
 
+# 🚨 need to initialize starship before tmux.
+# noticed issues with colors and nvim colorscheme if not
+eval "$(starship init zsh)"
+
 # Only force one TMUX session
 if command_exists tmux; then
   if [[ -z "$TMUX" && -n "$(which tmux)" && $(tmux ls -F '#{session_name}' 2>/dev/null) != 'TMUX' ]];then

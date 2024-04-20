@@ -24,7 +24,6 @@ if command_exists nvim; then
     alias vim="nvim"
     alias vi="nvim --noplugin"
 fi
-eval "$(starship init zsh)"
 # check if zoxide exist to avoid breaking cd command
 if command_exists zoxide; then 
     eval "$(zoxide init --cmd cd zsh)"
