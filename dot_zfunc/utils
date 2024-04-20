@@ -8,3 +8,6 @@ is_darwin(){
      [[ "${$(uname -s):l}" == 'darwin' ]]
 }
 
+is_warp_cli(){
+    [[ $(printenv | sed -n 's/\(WARP_*\)/\1/p' | wc -l | tr -d '[:space:]') > 0 ]]
+}
