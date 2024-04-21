@@ -69,8 +69,8 @@ preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
 # ---------------------------------------- 
 # match zsh binding with warp cli bindings
 # ----------------------------------------
-# - `-M vicmd` binding in vim normal mode
-# - `-M viins` binding in vim insert mode
+# - `-M vicmd` vim normal mode
+# - `-M viins` vim insert mode
 
 # Ctrl+A 
 bindkey '^A' beginning-of-line
@@ -107,6 +107,18 @@ bindkey '^R' history-incremental-search-backward
 autoload edit-command-line; zle -N edit-command-line
 bindkey '^e' edit-command-line
 
+
+if [[ ! -d "$HOME/.zfunc" ]]; then
+      mkdir "$HOME/.zfunc"
+fi
+# to load custom functions 
+fpath=("$HOME/.zfunc" "${fpath[@]}")
+
+# .zprofile is sourced on login - here we make sure to source it even on container where there is no login
+if [[ -f "$HOME/.zprofile" ]]; then
+  source "$HOME/.zprofile"
+fi
+
 # 🚨 need to initialize starship before tmux.
 # noticed issues with colors and nvim colorscheme if not
 eval "$(starship init zsh)"
@@ -116,13 +128,4 @@ if command_exists tmux; then
   if [[ -z "$TMUX" && -n "$(which tmux)" && $(tmux ls -F '#{session_name}' 2>/dev/null) != 'TMUX' ]];then
       tmux attach -t TMUX || tmux new -s TMUX
   fi
-  if [[ ! -d "$HOME/.zfunc" ]]; then
-      mkdir "$HOME/.zfunc"
-fi
-fi
-# to load custom functions 
-fpath=("$HOME/.zfunc" "${fpath[@]}")
-
-if [[ "$ZPROFILEOK" != 'ok' && -f "$HOME/.zprofile" ]]; then
-  source "$HOME/.zprofile"
 fi
