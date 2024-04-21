@@ -46,6 +46,9 @@ if command_exists git; then
         # user.username is maybe not a standard git config option - however we can use it for gitpass custom zfunction
         git config --global user.username "$GIT_USERNAME"
     fi
+    alias gc="git commit"
+    alias gca="git commit -a -m"
+    alias gst="git status" 
 fi
 
 if [[ -d "$HOME/.zsh/zsh-autosuggestions" ]]; then
