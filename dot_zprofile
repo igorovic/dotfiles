@@ -35,6 +35,8 @@ fi
 # GIT
 if command_exists git; then
     git config --global core.editor "nvim --noplugin"
+    git config --global core.autocrlf false
+    
     # do not override with empty values
     if [[ ! -z "$GIT_USER_EMAIL" && -z "$(git config user.email)" ]]; then
         git config --global user.email "$GIT_USER_EMAIL"
