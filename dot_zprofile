@@ -28,6 +28,9 @@ else
    echo 'zoxide is not installed' 
 fi
 
+# quick edit .zshrc 
+alias vrc="vim ~/.zshrc"
+
 if command_exists fzf; then
     eval "$(fzf --zsh)"
 fi

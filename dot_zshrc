@@ -133,3 +133,5 @@ if command_exists tmux; then
       tmux attach -t TMUX || tmux new -s TMUX
   fi
 fi
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
