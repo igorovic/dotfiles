@@ -12,6 +12,8 @@ nvm_config(){
 pnpm_config(){
     # use host's pnpm-store which should be mounted
     pnpm config --global set store-dir "$PNPM_STORE"
+    pnpm setup
+
 }
 
 install_node(){
@@ -43,6 +45,13 @@ EOF
 install_node
 
 echo 'export PNPM_STORE="$HOME/.pnpm-store/v3"' >> "$HOME/.zshenv"
+tee -a "$HOME/.zshenv" > /dev/null <<- 'EOF'
+    export PNPM_HOME="/home/vscode/.local/share/pnpm"
+    case ":$PATH:" in
+        *":$PNPM_HOME:"*) ;;
+        *) export PATH="$PNPM_HOME:$PATH" ;;
+    esac
+EOF
 
 # reset pnpm global store in container - to avoid conflicts with the host's store
 # need sed since sometime it returns the value 'undefined'
