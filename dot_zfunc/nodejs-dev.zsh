@@ -46,7 +46,7 @@ install_node
 
 echo 'export PNPM_STORE="$HOME/.pnpm-store/v3"' >> "$HOME/.zshenv"
 tee -a "$HOME/.zshenv" > /dev/null <<- 'EOF'
-    export PNPM_HOME="/home/vscode/.local/share/pnpm"
+    export PNPM_HOME="$HOME/.local/share/pnpm"
     case ":$PATH:" in
         *":$PNPM_HOME:"*) ;;
         *) export PATH="$PNPM_HOME:$PATH" ;;
