@@ -129,7 +129,7 @@ eval "$(starship init zsh)"
 
 # Only force one TMUX session
 if command_exists tmux; then
-  if [[ -z "$TMUX" && -n "$(which tmux)" && $(tmux ls -F '#{session_name}' 2>/dev/null) != 'TMUX' ]];then
+  if [[ -z "$TMUX" && -n "$(which tmux)" && $(tmux ls -F '#{session_name}' 2>/dev/null | wc -l) < 1 ]];then
       tmux attach -t TMUX || tmux new -s TMUX
   fi
 fi
