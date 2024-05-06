@@ -13,7 +13,7 @@ pnpm_config(){
     # use host's pnpm-store which should be mounted
     pnpm config --global set store-dir "$PNPM_STORE"
     pnpm setup
-
+    pnpm i -g vercel npm-check-updates
 }
 
 install_node(){
